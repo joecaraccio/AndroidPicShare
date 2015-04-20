@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-
+//here is where te Timeline happens
 public class HomeListActivity extends ListActivity {
 
 	private HomeViewAdapter mHomeViewAdapter;
@@ -70,7 +70,7 @@ public class HomeListActivity extends ListActivity {
 	public void onResume() {
 		super.onResume();
 
-		//Log.i(AnypicApplication.TAG, "Entered HomeListActivity onResume()");
+		//Log.i(PicShare.TAG, "Entered HomeListActivity onResume()");
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser != null) {
@@ -158,7 +158,7 @@ public class HomeListActivity extends ListActivity {
 							// and store them as fields in our ParseUser
 							
 							/*
-							 * User Model
+							 * User Model V1
 							 * 
 							 * displayName : String
 							 * email : string
@@ -168,6 +168,9 @@ public class HomeListActivity extends ListActivity {
 							 * facebookFriends : Array
 							 * channel : String
 							 * userAlreadyAutoFollowedFacebookFriends : boolean
+							 * 
+							 * Future Twitter Integration. Obivously would be all strings and arrays
+							 * 
 							 */
 							ParseUser currentUser = ParseUser
 									.getCurrentUser();
@@ -176,15 +179,16 @@ public class HomeListActivity extends ListActivity {
 							currentUser.saveInBackground();
 							
 							// Make another facebook request to auto follow all of
-							// the current user's facebook friends who are using Anypic
+							// the current user's facebook friends who are using PicShare
 							if( currentUser.get("userAlreadyAutoFollowedFacebookFriends")!=null &&
 									((Boolean) currentUser.get("userAlreadyAutoFollowedFacebookFriends")) ){
 								// do nothing
-								Log.i(AnypicApplication.TAG, "Already followed facebook friends");
+								Log.i(PicShare.TAG, "Already followed facebook friends");
 							} else{
 								autoFollowFacebookFriendsRequest(); 
 							}
 							// Associate the device with a user
+							//makes things a little easier for me
 							ParseInstallation installation = ParseInstallation.getCurrentInstallation();
 							installation.put("user", currentUser);
 							installation.saveInBackground();
@@ -193,11 +197,11 @@ public class HomeListActivity extends ListActivity {
 						} else if (response.getError() != null) {
 							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
-								Log.i(AnypicApplication.TAG,
+								Log.i(PicShare.TAG,
 										"The facebook session was invalidated.");
 								onLogoutButtonClicked();
 							} else {
-								Log.i(AnypicApplication.TAG,
+								Log.i(PicShare.TAG,
 										"Some other error: "
 												+ response.getError()
 														.getErrorMessage());
@@ -212,8 +216,8 @@ public class HomeListActivity extends ListActivity {
 	/**
 	 * This function performs a request to the Facebook Graph API, which 
 	 * finds all the friends of the current ParseUser and checks if any 
-	 * of them currently use Anypic. If so, then it automatically follows 
-	 * those friends on Anypic, by creating new Activity relationships. 
+	 * of them currently use PicShare. If so, then it automatically follows 
+	 * those friends on PicShare, by creating new Activity relationships. 
 	 */
 	private void autoFollowFacebookFriendsRequest(){
 		Request request = Request.newMyFriendsRequest(ParseFacebookUtils.getSession(), 
@@ -234,7 +238,7 @@ public class HomeListActivity extends ListActivity {
 										// friendsQuery successful, follow these users
 										ParseUser currentUser = ParseUser.getCurrentUser();
 										for(ParseUser friend : objects){
-											com.parse.anypic.Activity followActivity = new com.parse.anypic.Activity();
+											com.parse.PicShare.Activity followActivity = new com.parse.PicShare.Activity();
 											followActivity.setFromUser(currentUser);
 											followActivity.setToUser(friend);
 											followActivity.setType("follow");
@@ -244,7 +248,7 @@ public class HomeListActivity extends ListActivity {
 										currentUser.saveInBackground();
 									} else {
 										// friendsQuery failed
-										Log.i(AnypicApplication.TAG, "Query to find facebook friends in Parse failed");
+										Log.i(PicShareApplication.TAG, "Query to find facebook friends in Parse failed");
 									}
 								}
 							}); // end findInBackground()
@@ -254,11 +258,11 @@ public class HomeListActivity extends ListActivity {
 						} else if (response.getError() != null) {
 							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
-								Log.i(AnypicApplication.TAG,
+								Log.i(PicShareApplication.TAG,
 										"The facebook session was invalidated.");
 								onLogoutButtonClicked();
 							} else {
-								Log.i(AnypicApplication.TAG,
+								Log.i(PicShareApplication.TAG,
 										"Some other error: "
 												+ response.getError()
 														.getErrorMessage());
