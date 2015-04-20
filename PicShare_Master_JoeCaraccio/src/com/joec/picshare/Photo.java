@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
