@@ -1,6 +1,7 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
 
 import android.app.Fragment;
@@ -24,6 +25,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
+//brings up the camera for users to take pictures with..
+
 public class CameraFragment extends Fragment {
 
 	public static final String TAG = "CameraFragment";
@@ -32,6 +35,8 @@ public class CameraFragment extends Fragment {
 	private SurfaceView surfaceView;
 	private ParseFile photoFile;
 	private ImageButton photoButton;
+	
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
@@ -42,12 +47,12 @@ public class CameraFragment extends Fragment {
 
 		if (camera == null) {
 			try {
-				camera = Camera.open();
+				camera = Camera.open(); //open camera
 				photoButton.setEnabled(true);
 			} catch (Exception e) {
 				Log.e(TAG, "No camera with exception: " + e.getMessage());
 				photoButton.setEnabled(false);
-				Toast.makeText(getActivity(), "No camera detected",
+				Toast.makeText(getActivity(), "Oh Snap! No camera detected",
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -107,11 +112,7 @@ public class CameraFragment extends Fragment {
 		return v;
 	}
 
-	/*
-	 * ParseQueryAdapter loads ParseFiles into a ParseImageView at whatever size
-	 * they are saved. Since we never need a full-size image in our app, we'll
-	 * save a scaled one right away.
-	 */
+	
 	private void saveScaledPhoto(byte[] data) {
 
 		// Resize photo from camera byte array
@@ -131,8 +132,8 @@ public class CameraFragment extends Fragment {
 
 		byte[] scaledData = bos.toByteArray();
 
-		// Save the scaled image to Parse
-		photoFile = new ParseFile("anypic_photo.jpg", scaledData);
+		// Save the scaled image to Parse servers.. or i guess you could say picshare servers
+		photoFile = new ParseFile("picshare_pic.jpg", scaledData);
 		photoFile.saveInBackground(new SaveCallback() {
 
 			public void done(ParseException e) {
@@ -148,10 +149,7 @@ public class CameraFragment extends Fragment {
 	}
 
 	/*
-	 * Once the photo has saved successfully, we're ready to return to the
-	 * NewPhotoFragment. When we added the CameraFragment to the back stack, we
-	 * named it "NewPhotoFragment". Now we'll pop fragments off the back stack
-	 * until we reach that Fragment.
+	 *Now that photo saved go back to the NewPhotoFragment
 	 */
 	private void addPhotoToMealAndReturn(ParseFile photoFile) {
 		((NewPhotoActivity) getActivity()).getCurrentPhoto().setThumbnail(
@@ -171,7 +169,7 @@ public class CameraFragment extends Fragment {
 			} catch (Exception e) {
 				Log.i(TAG, "No camera: " + e.getMessage());
 				photoButton.setEnabled(false);
-				Toast.makeText(getActivity(), "No camera detected",
+				Toast.makeText(getActivity(), "No camera detected!!!",
 						Toast.LENGTH_LONG).show();
 			}
 		}
