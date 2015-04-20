@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import java.util.Arrays;
 
@@ -20,18 +20,23 @@ import com.parse.ParseUser;
 
 /*
  * The HomeViewAdapter is an extension of ParseQueryAdapter
- * that has a custom layout for Anypic photos in the home
+ * that has a custom layout for PicShare photos in the home
  * list view.
+ * 
+ * query is a pretty big deal, it essentially runs the whole app
+ * 
  */
 
 public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
+	
+	
 
 	public HomeViewAdapter(Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<Photo>() {
 			public ParseQuery<Photo> create() {
 				
 				// First, query for the friends whom the current user follows
-				ParseQuery<com.parse.anypic.Activity> followingActivitiesQuery = new ParseQuery<com.parse.anypic.Activity>("Activity");
+				ParseQuery<com.parse.PicShare.Activity> followingActivitiesQuery = new ParseQuery<com.parse.PicShare.Activity>("Activity");
 				followingActivitiesQuery.whereMatches("type", "follow");
 				followingActivitiesQuery.whereEqualTo("fromUser", ParseUser.getCurrentUser());
 				
@@ -45,8 +50,7 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 				photosFromCurrentUserQuery.whereEqualTo("user", ParseUser.getCurrentUser());
 				photosFromCurrentUserQuery.whereExists("image");
 				
-				// We create a final compound query that will find all of the photos that were
-			    // taken by the user's friends or by the user
+				//combo query of all of above
 				ParseQuery<Photo> query = ParseQuery.or(Arrays.asList( photosFromFollowedUsersQuery, photosFromCurrentUserQuery ));
 				query.include("user");
 				query.orderByDescending("createdAt");
@@ -57,13 +61,11 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 	}
 
 	/**
-	 * This class is overridden to provide a custom view for each item in the 
-	 * Home List View. It sets the user's profile picture, their user name,
-	 * and then displays the actual photo.
+	 * Custom View
 	 * 
-	 * See home_list_item.xml for the layout file
+	 * Layout file: home_list_item.xml 
 	 * 
-	 * @see com.parse.ParseQueryAdapter#getItemView(com.parse.ParseObject, android.view.View, android.view.ViewGroup)
+	 * 
 	 */
 	@Override
 	public View getItemView(Photo photo, View v, ViewGroup parent) {
@@ -84,7 +86,7 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					// nothing to do
-					//Log.i(AnypicApplication.TAG, "7. Thumbnail view loaded");
+					//Log.i(PicShareApplication.TAG, "7. Thumbnail view loaded");
 				}
 			});
 		} else { // Clear ParseImageView if an object doesn't have a photo
@@ -96,31 +98,31 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 		usernameView.setText((String) user.get("displayName"));
 		
 		// Set up the actual photo
-		ParseImageView anypicPhotoView = (ParseImageView) v.findViewById(R.id.photo);
+		ParseImageView PicSharePhotoView = (ParseImageView) v.findViewById(R.id.photo);
 		ParseFile photoFile = photo.getImage();
 		
 		// TODO (future) - get image bitmap, then set the image view with setImageBitmap()
 		// we can use the decodeBitmap tricks to reduce the size to save memory
 		
 		if (photoFile != null) {
-			anypicPhotoView.setParseFile(photoFile);
-			anypicPhotoView.loadInBackground(new GetDataCallback() {
+			PicSharePhotoView.setParseFile(photoFile);
+			PicSharePhotoView.loadInBackground(new GetDataCallback() {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					// nothing to do
-					//Log.i(AnypicApplication.TAG, "8. Image view loaded");
+					//Log.i(PicShareApplication.TAG, "8. Image view loaded");
 				}
 			});
 		} else { // Clear ParseImageView if an object doesn't have a photo
-	        anypicPhotoView.setImageResource(android.R.color.transparent);
+	        PicSharePhotoView.setImageResource(android.R.color.transparent);
 	    }
 		
-
-//		final ImageView iv=anypicPhotoView;
+//      fail
+//		final ImageView iv=PicSharePhotoView;
 //		ViewTreeObserver vto = iv.getViewTreeObserver();
 //		vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 //			public boolean onPreDraw() {
-//				Log.i(AnypicApplication.TAG, "*** Photo height: " + iv.getMeasuredHeight() + " width: " + iv.getMeasuredWidth());
+//				Log.i(PicShareApplication.TAG, "*** Photo height: " + iv.getMeasuredHeight() + " width: " + iv.getMeasuredWidth());
 //				return true;
 //			}
 //		});
