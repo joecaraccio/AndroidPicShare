@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -21,15 +21,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 /*
- * This fragment is the preview page for publishing
- * a new photo to Anypic. It lets the user see a 
- * preview of the image they just captured in a ParseImageView,
- * and then choose whether they would like to publish it or 
- * cancel.
- * 
- * If they choose "Publish", then a new Photo object 
- * gets created on Parse with the associated ParseFile 
- * containing the image. 
+ * The publishing page, allows users to choose if they want to publish the app or not
  */
 public class NewPhotoFragment extends Fragment {
 
@@ -78,7 +70,7 @@ public class NewPhotoFragment extends Fragment {
 					public void done(ParseException e) {
 						getProgressDialog().dismiss();
 						if (e == null) {
-							Log.i(AnypicApplication.TAG, "Saved new Photo to Parse!");
+							Log.i(PicShareApplication.TAG, "Saved new Photo to Parse!");
 							getActivity().setResult(Activity.RESULT_OK);
 							getActivity().finish();
 						} else {
@@ -121,7 +113,7 @@ public class NewPhotoFragment extends Fragment {
 		super.onResume();
 		ParseFile photoFile = ((NewPhotoActivity) getActivity()).getImageFile();
 		if (photoFile != null) {
-			Log.i(AnypicApplication.TAG, "The photo WAS taken");
+			Log.i(PicShareApplication.TAG, "The photo WAS taken");
 			photoPreview.setParseFile(photoFile);
 			photoPreview.loadInBackground(new GetDataCallback() {
 				@Override
