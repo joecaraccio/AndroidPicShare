@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
 			showHomeListActivity();
 		}
 		
-		// For push notifications
+		//push notifications
 		ParseAnalytics.trackAppOpened(getIntent());
 	}
 	
@@ -93,7 +93,7 @@ public class LoginActivity extends Activity {
 		//Log.i(AnypicApplication.TAG, "entered showHomeListActivity");
 		Intent intent = new Intent(this, HomeListActivity.class);
 		startActivity(intent);
-		finish(); // This closes the login screen so it's not on the back stack
+		finish(); // This closes the login screen 
 	}
 	
 	/***************************************************************************/
@@ -101,16 +101,13 @@ public class LoginActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+		
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
