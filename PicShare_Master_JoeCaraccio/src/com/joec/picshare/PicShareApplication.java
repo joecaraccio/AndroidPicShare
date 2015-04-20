@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import android.app.Application;
 
@@ -9,44 +9,30 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.PushService;
 
-public class AnypicApplication extends Application {
+public class PicShareApplication extends Application {
 
-	static final String TAG = "Panagram";
+	//the setup file - joe c
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();		
 		
 		/*
-		 * In this tutorial, we'll subclass ParseObjects for convenience to
-		 * create and modify Photo objects.
-		 * 
-		 * Also, we'll use an Activity class to keep track of the relationships
-		 * of ParseUsers with each other and Photos. Every time a user follows, likes 
-		 * or comments, a new activity is created to represent the relationship.
+		 *subclasses for the user and for the actual pphoto
 		 */
 		ParseObject.registerSubclass(Photo.class);
 		ParseObject.registerSubclass(Activity.class);
 		
-		/*
-		 * Fill in this section with your Parse credentials
-		 */
-		Parse.initialize(this, "YOUR_APPLICATION_KEY", "YOUR_CLIENT_KEY");
-		
-		// Set your Facebook App Id in strings.xml
+		//parse setup stuff with parse server
+		Parse.initialize(this, "4X6Y1S87zj0mybfgFSmTMHtJxNuR675j4uTy5iXE", "vLjQqQ5ZIOE195yQoGHVuKfcJyTj8zPZS57ygBpw");		
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
+		//using the facebook dev sdk as well
 		
 
-		/*
-		 * For more information on app security and Parse ACL:
-		 * https://www.parse.com/docs/android_guide#security-recommendations
-		 */
+		//gotta look into acl a bit
 		ParseACL defaultACL = new ParseACL();
 
-		/*
-		 * If you would like all objects to be private by default, remove this
-		 * line
-		 */
+		
 		defaultACL.setPublicReadAccess(true);
 
 		/*
@@ -59,6 +45,8 @@ public class AnypicApplication extends Application {
 		 */
 		PushService.setDefaultPushCallback(this, LoginActivity.class);
 		ParseInstallation.getCurrentInstallation().saveInBackground();
+		
+		//bam
 	}
 
 }
