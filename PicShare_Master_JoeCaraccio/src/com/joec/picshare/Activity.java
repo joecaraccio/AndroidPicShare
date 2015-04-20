@@ -1,4 +1,5 @@
-package com.parse.anypic;
+package com.joec.picshare;
+
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
@@ -6,9 +7,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 /*
- * An extension of ParseObject that makes
- * it more convenient to access information
- * about a given Photo 
+ * This is the parse object I created called activity
+ * we reference it in a bunch of other java classes here
  */
 
 @ParseClassName("Activity")
@@ -54,6 +54,8 @@ public class Activity extends ParseObject {
 		return getParseFile("photo");
 	}
 	
+	
+	//the photo file we use for each picture
 	public void setPhoto(ParseFile pf){
 		put("photo", pf);
 	}
