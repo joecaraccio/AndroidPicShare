@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import android.content.Context;
 import android.view.View;
@@ -14,8 +14,7 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 /*
- * The UserViewAdapter is an extension of ParseQueryAdapter
- * that has a custom layout for Anypic photos for the current user
+ * UserViewAdapter modified off ParseQueryAdapter. Create the card like list interface
  */
 
 public class UserViewAdapter extends ParseQueryAdapter<Photo> {
@@ -38,11 +37,9 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
 	}
 	
 	/**
-	 * This class is overridden to provide a custom view for each item in the 
-	 * User's List View. It sets the user's profile picture, the user name,
-	 * and then displays the actual photo.
 	 * 
-	 * See user_list_item.xml for the layout file
+	 * Layout File: user_list_item.xml
+	 *This is the "card", provides a custom view
 	 * 
 	 * @see com.parse.ParseQueryAdapter#getItemView(com.parse.ParseObject, android.view.View, android.view.ViewGroup)
 	 */
@@ -65,7 +62,7 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					// nothing to do
-					//Log.i(AnypicApplication.TAG, "7. Thumbnail view loaded");
+					//Log.i(PicShareApplication.TAG, "7. Thumbnail view loaded");
 				}
 			});
 		} else { // Clear ParseImageView if an object doesn't have a photo
@@ -77,22 +74,22 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
 		usernameView.setText((String) user.get("displayName"));
 		
 		// Set up the actual photo
-		ParseImageView anypicPhotoView = (ParseImageView) v.findViewById(R.id.photo);
+		ParseImageView PicSharePhotoView = (ParseImageView) v.findViewById(R.id.photo);
 		ParseFile photoFile = photo.getImage();
 		
 		// TODO (future) - get image bitmap, then set the image view with setImageBitmap()
 		// we can use the decodeBitmap tricks to reduce the size to save memory
 		
 		if (photoFile != null) {
-			anypicPhotoView.setParseFile(photoFile);
-			anypicPhotoView.loadInBackground(new GetDataCallback() {
+			PicSharePhotoView.setParseFile(photoFile);
+			PicSharePhotoView.loadInBackground(new GetDataCallback() {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					// nothing to do
 				}
 			});
 		} else { // Clear ParseImageView if an object doesn't have a photo
-	        anypicPhotoView.setImageResource(android.R.color.transparent);
+	        PicSharePhotoView.setImageResource(android.R.color.transparent);
 	    }
 		
 		return v;
