@@ -1,4 +1,4 @@
-package com.parse.anypic;
+package com.joec.picshare;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,8 +39,7 @@ import com.parse.ParseFile;
 import com.parse.SaveCallback;
 	
 /*
- * NewPhotoActivity contains two fragments that handle
- * data entry and capturing a photo.
+ * This class creates two fragments to manage taking and uploading a photo
  * The Activity manages the overall photo data.
  */
 public class NewPhotoActivity extends Activity {
@@ -119,20 +118,20 @@ public class NewPhotoActivity extends Activity {
 	        	
 	        	// first try and determine if the picture was taken by the camera
 	        	if(data == null){
-	        		Log.i(AnypicApplication.TAG, "intent data was null");
+	        		Log.i(PicShareApplication.TAG, "intent data was null");
 	        		isCamera = true;
 	        	}
 	        	else {
 	        		final String action = data.getAction();
 	                if(action == null)
 	                {
-	                	Log.i(AnypicApplication.TAG, "Intent data.getAction() was null");
+	                	Log.i(PicShareApplication.TAG, "Intent data.getAction() was null");
 	                    isCamera = false;
 	                }
 	                else
 	                {
 	                    isCamera = action.equals(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-	                    Log.i(AnypicApplication.TAG, "Intent data.getAction was equal to camera capture? " + isCamera);
+	                    Log.i(PicShareApplication.TAG, "Intent data.getAction was equal to camera capture? " + isCamera);
 	                }
 	        	}
 	        	
@@ -148,11 +147,11 @@ public class NewPhotoActivity extends Activity {
 	            	// if data is null, then selectImageUri = null, else selectImageUri = data.getData()
 	                selectedImageUri = data == null ? null : data.getData();
 	                
-	                Log.i(AnypicApplication.TAG, "selectedImageUri is "+ selectedImageUri);
+	                Log.i(PicShareApplication.TAG, "selectedImageUri is "+ selectedImageUri);
 	                if(selectedImageUri != null){
 	                	// we need to decode the file from its URI
 	                	String realPath = getPathFromUri(getApplicationContext(), selectedImageUri);
-	                	Log.i(AnypicApplication.TAG, "selectedImageUri *real path* is "+ realPath);
+	                	Log.i(PicShareApplication.TAG, "selectedImageUri *real path* is "+ realPath);
 	                	savePhotoFiles(realPath);
 	                	return;
 	                }
@@ -167,7 +166,7 @@ public class NewPhotoActivity extends Activity {
 	            	if(selectedImageUri.getPath() != null){
 	            		savePhotoFiles(selectedImageUri.getPath());
 	            	} else { 
-	            		Log.i(AnypicApplication.TAG, "Error finding file path");
+	            		Log.i(PicShareApplication.TAG, "Error finding file path");
 	            		cancelActivity(); 
 	            	}
 	            } else {
@@ -195,7 +194,7 @@ public class NewPhotoActivity extends Activity {
 	}
 	
 	/* ***************************************************************** 
-	 * Section taken from http://stackoverflow.com/a/20559175/1092403
+	 * http://stackoverflow.com/a/20559175/1092403
 	 * *****************************************************************
 	 */
 	
@@ -336,7 +335,7 @@ public class NewPhotoActivity extends Activity {
 	/**
 	 * Takes the photo captured by the user, and saves the image and it's 
 	 * scaled-down thumbnail as ParseFiles. This occurs after the user captures
-	 * a photo, but before the user chooses to publish to Anypic. Thus, these
+	 * a photo, but before the user chooses to publish to PicShare. Thus, these
 	 * ParseFiles can later be associated with the Photo object itself. 
 	 * 
 	 * @param data The byte array containing the image data
@@ -345,25 +344,25 @@ public class NewPhotoActivity extends Activity {
 	private void savePhotoFiles(String pathToFile) {
 
 		// Convert to Bitmap to assist with resizing
-		Bitmap anypicImage = decodeSampledBitmapFromFile(pathToFile, REQ_WIDTH, REQ_HEIGHT);
-		//Bitmap anypicImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+		Bitmap PicShareImage = decodeSampledBitmapFromFile(pathToFile, REQ_WIDTH, REQ_HEIGHT);
+		//Bitmap PicShareImage = BitmapFactory.decodeByteArray(data, 0, data.length);
 		
 		// Override Android default landscape orientation and save portrait
 		Matrix matrix = new Matrix();
 		matrix.postRotate(90);
-		Bitmap rotatedImage = Bitmap.createBitmap(anypicImage, 0,
-				0, anypicImage.getWidth(), anypicImage.getHeight(),
+		Bitmap rotatedImage = Bitmap.createBitmap(PicShareImage, 0,
+				0, PicShareImage.getWidth(), PicShareImage.getHeight(),
 				matrix, true);
 		
 		// make thumbnail with size of 86 pixels
-		Bitmap anypicThumbnail = Bitmap.createScaledBitmap(rotatedImage, 86, 86, false);
+		Bitmap PicShareThumbnail = Bitmap.createScaledBitmap(rotatedImage, 86, 86, false);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 		byte[] rotatedData = bos.toByteArray();
 		
 		bos.reset(); // reset the stream to prepare for the thumbnail
-		anypicThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+		PicShareThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 		byte[] thumbnailData = bos.toByteArray();
 
 		try {
@@ -401,7 +400,7 @@ public class NewPhotoActivity extends Activity {
 			}
 		});
 		
-		Log.i(AnypicApplication.TAG, "Finished saving the photos to ParseFiles!");
+		Log.i(PicShareApplication.TAG, "Finished saving the photos to ParseFiles!");
 	}
 	
 	/** Create a file Uri for saving an image */
@@ -424,19 +423,16 @@ public class NewPhotoActivity extends Activity {
 	private static File getOutputMediaFile(int type){
 	    // To be safe, you should check that the SDCard is mounted
 	    // using Environment.getExternalStorageState() before doing this.
-		Log.i(AnypicApplication.TAG, "entering getOutputMediaFile");
+		Log.i(PicShareApplication.TAG, "entering getOutputMediaFile");
 
 	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	              Environment.DIRECTORY_PICTURES), "Anypic");
-	    // This location works best if you want the created images to be shared
-	    // between applications and persist after your app has been uninstalled.
-
+	              Environment.DIRECTORY_PICTURES), "PicShare");
+	    
 	    // Create the storage directory if it does not exist
-	    // Make sure you have the permission to write to the SD Card enabled 
-	    // in order to do this!!
+	    // Note...might wanna make sure I have permission to create directorys in the manifest
 	    if (! mediaStorageDir.exists()){
 	        if (! mediaStorageDir.mkdirs()){
-	            Log.i(AnypicApplication.TAG, "getOutputMediaFile failed to create directory");
+	            Log.i(PicShareApplication.TAG, "getOutputMediaFile failed to create directory");
 	            return null;
 	        }
 	    }
@@ -454,19 +450,7 @@ public class NewPhotoActivity extends Activity {
 	    return mediaFile;
 	}
 	
-	/**
-	 * This function takes the path to our file from which we want to create
-	 * a Bitmap, and decodes it using a smaller sample size in an effort to 
-	 * avoid an OutOfMemoryError.
-	 * 
-	 * See: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-	 * 
-	 * @param path The path to the file resource 
-	 * @param reqWidth The required width that the image should be prepared for
-	 * @param reqHeight The required height that the image should be prepared for
-	 * @return A Bitmap resource that has been scaled down to an appropriate size, so that it can conserve memory
-	 * 
-	 */
+	
 	public static Bitmap decodeSampledBitmapFromFile(String path,
 									int reqWidth, int reqHeight) {
 
@@ -484,10 +468,7 @@ public class NewPhotoActivity extends Activity {
 	}
 	
 	/**
-	 * This is a helper function used to calculate the appropriate sampleSize 
-	 * for use in the decodeSampledBitmapFromFile() function.
-	 * 
-	 * See: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+	
 	 * 
 	 * @param options The BitmapOptions for the Bitmap resource that we want to scale down
 	 * @param reqWidth The target width of the UI element in which we want to fit the Bitmap
